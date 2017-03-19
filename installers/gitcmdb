@@ -50,9 +50,13 @@ export instance=`hostname | cut -d. -f1 | cut -d- -f2`
 # Create install path if it does not exist yet
 sudo mkdir -p "$gitcmdb_path" &&
 
-# Clone repo
+# Update or clone repo
 check_git
-sudo git clone "$gitcmdb_repo" "$gitcmdb_path/gitcmdb" || echo "Couldn't clone $gitcmdb_repo in $gitcmdb_path/gitcmdb"
+if [ -e "$gitcmdb_path/gitcmdb" ]; then
+    sudo git --git-dir "$gitcmdb_path/gitcmdb/.git" pull
+else
+    sudo git clone "$gitcmdb_repo" "$gitcmdb_path/gitcmdb" || echo "Couldn't clone $gitcmdb_repo in $gitcmdb_path/gitcmdb"
+fi
 
 # Read configuration
 if [ -e "$gitcmdb_path/gitcmdb/configs/default.yaml" ]; then parse_yaml "$gitcmdb_path/gitcmdb/configs/default.yaml"; fi
