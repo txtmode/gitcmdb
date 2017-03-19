@@ -58,7 +58,7 @@ check_git &&
 if [ -e "$gitcmdb_path/gitcmdb" ]; then
     sudo git --git-dir "$gitcmdb_path/gitcmdb/.git" pull && export gitupdated=yes
 else
-    sudo git clone "$gitcmdb_repo" "$gitcmdb_path/gitcmdb" || echo "Couldn't clone $gitcmdb_repo in $gitcmdb_path/gitcmdb"
+    sudo git clone "$gitcmdb_repo" "$gitcmdb_path/gitcmdb" | grep -v 'Already up-to-date' && export gitupdated=yes
 fi
 
 # Read configuration
@@ -67,7 +67,10 @@ if [ "$role" != '' -a -e "$gitcmdb_path/gitcmdb/configs/roles/$role.yaml" ]; the
 if [ "$instance" != '' -a -e "$gitcmdb_path/gitcmdb/configs/instances/$instance.yaml" ]; then eval $(parse_yaml "$gitcmdb_path/gitcmdb/configs/instances/$instance.yaml" "gitcmdb_"); fi
 
 # Set cron
-if [ -e "$gitcmdb_path/gitcmdb/crons/$gitcmdb_cron" ]; then sudo cp "$gitcmdb_path/gitcmdb/crons/$gitcmdb_cron" /etc/cron.d/gitcmdb; fi
+if [ ! -e '/etc/cron.d/gitcmdb' ]; then sudo cp "$gitcmdb_path/gitcmdb/crons/$gitcmdb_cron" /etc/cron.d/gitcmdb; fi
+
+# Run specific installer if gitupdated (all environment variables set)
+if [ "$gitupdated" = 'yes' ]; then sudo "$gitcmdb_path/gitcmdb/installers/$gitcmdb_installer"; fi
 
 # Remove lockdir
 rmdir /tmp/gitcmdb.lock
