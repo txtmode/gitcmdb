@@ -29,15 +29,18 @@ parse_yaml() {
 check_git() {
   if [ ! -e /usr/bin/git ]; then
     if [ -e /etc/redhat_release ]; then
-      sudo /bin/yum -y install git && exit 0
+      sudo /bin/yum -y install git && return 0
     elif [ -e /etc/debian_version ]; then
-      sudo /usr/bin/apt-get -y install git && exit 0
+      sudo /usr/bin/apt-get -y install git && return 0
     else
        echo "Unsuported distribution"
-       exit 1
+       return 1
     fi
   fi
 }
+
+# Create lockdir or exit
+if ! mkdir /tmp/gitcmdb.lock 2>/dev/null; then exit 0; fi
 
 # Check params or set defaults values
 if [ "$1" = '' ]; then export gitcmdb_repo='https://github.com/txtmode/gitcmdb'; else export gitcmdb_repo="$1"; fi
@@ -51,9 +54,9 @@ export instance=`hostname | cut -d. -f1 | cut -d- -f2`
 sudo mkdir -p "$gitcmdb_path" &&
 
 # Update or clone repo
-check_git
+check_git &&
 if [ -e "$gitcmdb_path/gitcmdb" ]; then
-    sudo git --git-dir "$gitcmdb_path/gitcmdb/.git" pull
+    sudo git --git-dir "$gitcmdb_path/gitcmdb/.git" pull && export gitupdated=yes
 else
     sudo git clone "$gitcmdb_repo" "$gitcmdb_path/gitcmdb" || echo "Couldn't clone $gitcmdb_repo in $gitcmdb_path/gitcmdb"
 fi
@@ -65,3 +68,6 @@ if [ "$instance" != '' -a -e "$gitcmdb_path/gitcmdb/configs/instances/$instance.
 
 # Set cron
 if [ -e "$gitcmdb_path/gitcmdb/crons/$gitcmdb_cron" ]; then sudo cp "$gitcmdb_path/gitcmdb/crons/$gitcmdb_cron" /etc/cron.d/gitcmdb; fi
+
+# Remove lockdir
+rmdir /tmp/gitcmdb.lock
