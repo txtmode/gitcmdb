@@ -1,4 +1,4 @@
-# Gitcmdb
+# gitcmdb
 ## What is it?
 
 CMDB system where CMDB server is git server (for example GitHub)
