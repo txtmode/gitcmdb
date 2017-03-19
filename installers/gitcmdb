@@ -44,7 +44,7 @@ if ! mkdir /tmp/gitcmdb.lock 2>/dev/null; then exit 0; fi
 
 # Check params or set defaults values
 if [ "$1" = '' ]; then export gitcmdb_repo='https://github.com/txtmode/gitcmdb'; else export gitcmdb_repo="$1"; fi
-if [ "$2" = '' ]; then export gitcmdb_path='/opt'; else export gitcmdb_path="$1"; fi
+if [ "$2" = '' ]; then export gitcmdb_path='/opt'; else export gitcmdb_path="$2"; fi
 
 # Detect role and instance name
 export role=`hostname | cut -d. -f1 | cut -d- -f1`
