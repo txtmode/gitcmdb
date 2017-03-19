@@ -1,0 +1,5 @@
+installer: puppet
+repo: https://github.com/txtmode/gitcmdb-puppet.git
+branch: master
+cron: puppet
+key: provisioning
