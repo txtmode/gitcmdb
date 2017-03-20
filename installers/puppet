@@ -8,10 +8,4 @@
 
 # check if puppet is installed
 
-# check if repo is downloaded in gitcmdb_path, if not install it
-
-# check if repo is in expected brach, if not change
-
-# check if repo is updated
-
 # run puppet if repo installed or updated

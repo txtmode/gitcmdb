@@ -56,9 +56,9 @@ sudo mkdir -p "$gitcmdb_path" &&
 # Update or clone repo
 check_git &&
 if [ -e "$gitcmdb_path/gitcmdb" ]; then
-    sudo git --git-dir "$gitcmdb_path/gitcmdb/.git" pull
+    sudo git --git-dir "$gitcmdb_path/gitcmdb/.git" pull | grep -v 'Already up-to-date' && export runinstaller=yes
 else
-    sudo git clone "$gitcmdb_repo" "$gitcmdb_path/gitcmdb" 2>&1 >/dev/null
+    sudo git clone "$gitcmdb_repo" "$gitcmdb_path/gitcmdb" 2>&1 >/dev/null && export runinstaller=yes
 fi
 
 # Read configuration
@@ -69,8 +69,19 @@ if [ "$instance" != '' -a -e "$gitcmdb_path/gitcmdb/configs/instances/$instance.
 # Set cron
 if [ ! -e '/etc/cron.d/gitcmdb' ]; then sudo cp "$gitcmdb_path/gitcmdb/crons/$gitcmdb_cron" /etc/cron.d/gitcmdb; fi
 
-# Run specific installer (all environment variables set)
-source "$gitcmdb_path/gitcmdb/installers/$gitcmdb_installer"
+# check if repo is downloaded in gitcmdb_path, if not install it, if yes update it and set runinstaller
+if [ ! -e "$gitcmdb_path/gitcmdb_$gitcmdb_installer" ]; then
+   sudo git clone "$gitcmdb_repo" "$gitcmdb_path/gitcmdb_$gitcmdb_installer" && export runinstaller=yes
+elif [ `git --git-dir $gitcmdb_path/gitcmdb_$gitcmdb_installer/.git branch | grep \* | cut -d' ' -f2` = "$gitcmdb_branch" ]; then
+   sudo git --git-dir "$gitcmdb_path/gitcmdb_$gitcmdb_installer/.git" pull | grep -v 'Already up-to-date' && export runinstaller=yes
+else
+   sudo git --git-dir "$gitcmdb_path/gitcmdb_$gitcmdb_installer/.git" checkout $gitcmdb_branch && export runinstaller=yes
+fi
+
+# Run specific installer if runsintaller==yes (all environment variables set)
+if [ "$runinstaller" = 'yes' ]; then
+   source "$gitcmdb_path/gitcmdb/installers/$gitcmdb_installer"
+fi
 
 # Remove lockdir
 rmdir /tmp/gitcmdb.lock
