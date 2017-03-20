@@ -8,5 +8,30 @@
 echo Running puppet installer
 
 # check if puppet is installed
+if [ ! -e /usr/bin/puppet ]; then
+  if [ -e /etc/redhat_release ]; then
+    sudo /bin/yum -y install puppet
+  elif [ -e /etc/debian_version ]; then
+    sudo /usr/bin/apt-get -y install puppet
+  else
+     echo "Unsuported distribution"
+     return 1
+  fi
+fi
 
-# run puppet if repo installed or updated
+#check if r10k is installed
+if [ ! -e /usr/local/bin/r10k ]; then
+  sudo gem install r10k
+fi
+
+# check /etc/puppet link
+if [ ! "$(readlink /etc/puppet)" = "$gitcmdb_path/gitdmdb_$gitcmdb_installer" ]; then
+  mv /etc/puppet /etc/puppet.`date +%s`
+  ln -sf $gitcmdb_path/gitdmdb_$gitcmdb_installer
+fi
+
+# install Puppetfile modules
+/usr/local/bin/r10k puppetfile install --puppetfile /etc/puppet/Puppetfile --moduledir /etc/puppet/modules
+
+# run puppet
+#/usr/bin/puppet apply ... 
