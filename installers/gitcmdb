@@ -70,7 +70,7 @@ if [ "$instance" != '' -a -e "$gitcmdb_path/gitcmdb/configs/instances/$instance.
 if [ ! -e '/etc/cron.d/gitcmdb' ]; then sudo cp "$gitcmdb_path/gitcmdb/crons/$gitcmdb_cron" /etc/cron.d/gitcmdb; fi
 
 # Run specific installer (all environment variables set)
-sudo "$gitcmdb_path/gitcmdb/installers/$gitcmdb_installer"
+source "$gitcmdb_path/gitcmdb/installers/$gitcmdb_installer"
 
 # Remove lockdir
 rmdir /tmp/gitcmdb.lock
