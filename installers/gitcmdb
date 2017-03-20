@@ -73,6 +73,7 @@ if [ ! -e '/etc/cron.d/gitcmdb' ]; then sudo cp "$gitcmdb_path/gitcmdb/crons/$gi
 if [ ! -e "$gitcmdb_path/gitcmdb_$gitcmdb_installer" ]; then
    sudo git clone "$gitcmdb_repo" "$gitcmdb_path/gitcmdb_$gitcmdb_installer" && export runinstaller=yes
 elif [ `git --git-dir $gitcmdb_path/gitcmdb_$gitcmdb_installer/.git branch | grep \* | cut -d' ' -f2` = "$gitcmdb_branch" ]; then
+   echo git --git-dir "$gitcmdb_path/gitcmdb_$gitcmdb_installer/.git" pull
    sudo git --git-dir "$gitcmdb_path/gitcmdb_$gitcmdb_installer/.git" pull | grep -v 'Already up-to-date' && export runinstaller=yes
 else
    sudo git --git-dir "$gitcmdb_path/gitcmdb_$gitcmdb_installer/.git" checkout $gitcmdb_branch && export runinstaller=yes
