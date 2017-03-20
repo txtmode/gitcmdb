@@ -5,7 +5,7 @@
 # * gitcmdb_repo (puppet repo to download)
 # * gitcmdb_branch ( puppet repo branch)
 # * gitcmdb_path (folder where to download the repo)
-echo Running $0
+echo Running puppet installer
 
 # check if puppet is installed
 
