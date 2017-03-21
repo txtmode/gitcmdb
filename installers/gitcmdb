@@ -81,7 +81,7 @@ if [ "$runinstaller" = 'yes' ]; then
 fi
 
 # Set cron if setcron==yes
-if [ "$setcron" = 'yes' ]; then
+if [ "$setcron" = 'yes' -o ! -e /etc/cron.d/gitcmdb ]; then
    sudo echo "* * * * */$gitcmdb_frequency root $gitcmdb_path/gitcmdb/installers/gitcmdb \"$gitcmdb_repo\" \"$gitcmdb_path\" 2>&1 | logger -t cmdb" | sudo tee /etc/cron.d/gitcmdb
 fi
 
