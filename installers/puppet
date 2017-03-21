@@ -34,4 +34,4 @@ fi
 /usr/local/bin/r10k puppetfile install --puppetfile /etc/puppet/Puppetfile --moduledir /etc/puppet/modules
 
 # run puppet
-#/usr/bin/puppet apply ... 
+/usr/bin/puppet apply /etc/puppet/manifests/site.pp
