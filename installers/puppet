@@ -26,12 +26,12 @@ fi
 
 # check /etc/puppet link
 if [ ! "$(readlink /etc/puppet)" = "$gitcmdb_path/gitdmdb_$gitcmdb_installer" ]; then
-  mv /etc/puppet /etc/puppet.`date +%s`
-  ln -sf $gitcmdb_path/gitdmdb_$gitcmdb_installer
+  sudo mv /etc/puppet /etc/puppet.`date +%s`
+  sudo ln -sf $gitcmdb_path/gitdmdb_$gitcmdb_installer
 fi
 
 # install Puppetfile modules
-/usr/local/bin/r10k puppetfile install --puppetfile /etc/puppet/Puppetfile --moduledir /etc/puppet/modules
+sudo /usr/local/bin/r10k puppetfile install --puppetfile /etc/puppet/Puppetfile --moduledir /etc/puppet/modules
 
 # run puppet
-/usr/bin/puppet apply /etc/puppet/manifests/site.pp
+sudo /usr/bin/puppet apply /etc/puppet/manifests/site.pp
