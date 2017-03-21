@@ -61,13 +61,13 @@ else
     sudo git clone "$gitcmdb_repo" "$gitcmdb_path/gitcmdb" 2>&1 >/dev/null && export runinstaller=yes
 fi
 
+# Set cron
+if [ ! -e '/etc/cron.d/gitcmdb' ]; then sudo echo "* * * * */$gitcmdb_frequency root $gitcmdb_path/gitcmdb/installers/gitcmdb \"$gitcmdb_repo\" \"$gitcmdb_path\" 2>&1 | logger -t cmdb" > /etc/cron.d/gitcmdb; fi
+
 # Read configuration
 if [ -e "$gitcmdb_path/gitcmdb/configs/default.yaml" ]; then eval $(parse_yaml "$gitcmdb_path/gitcmdb/configs/default.yaml" "gitcmdb_"); fi
 if [ "$role" != '' -a -e "$gitcmdb_path/gitcmdb/configs/roles/$role.yaml" ]; then eval $(parse_yaml "$gitcmdb_path/gitcmdb/configs/default.yaml" "gitcmdb_"); fi
 if [ "$instance" != '' -a -e "$gitcmdb_path/gitcmdb/configs/instances/$instance.yaml" ]; then eval $(parse_yaml "$gitcmdb_path/gitcmdb/configs/instances/$instance.yaml" "gitcmdb_"); fi
-
-# Set cron
-if [ ! -e '/etc/cron.d/gitcmdb' ]; then sudo cp "$gitcmdb_path/gitcmdb/crons/$gitcmdb_cron" /etc/cron.d/gitcmdb; fi
 
 # check if repo is downloaded in gitcmdb_path, if not install it, if yes update it and set runinstaller
 if [ ! -e "$gitcmdb_path/gitcmdb_$gitcmdb_installer" ]; then

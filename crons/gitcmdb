@@ -1,1 +1,0 @@
-* * * * * root /opt/gitcmdb/installers/gitcmdb 2>&1 | logger -t cmdb
