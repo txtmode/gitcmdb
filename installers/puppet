@@ -27,7 +27,7 @@ fi
 # check /etc/puppet link
 if [ ! "$(readlink /etc/puppet)" = "$gitcmdb_path/gitcmdb_$gitcmdb_installer" ]; then
   sudo mv /etc/puppet /etc/puppet.`date +%s`
-  sudo ln -sf $gitcmdb_path/gitcmdb_$gitcmdb_installer
+  sudo ln -sf $gitcmdb_path/gitcmdb_$gitcmdb_installer /etc/puppet
 fi
 
 # install Puppetfile modules
