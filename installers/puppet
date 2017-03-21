@@ -31,7 +31,13 @@ if [ ! "$(readlink /etc/puppet)" = "$gitcmdb_path/gitcmdb_$gitcmdb_installer" ];
 fi
 
 # install Puppetfile modules
-sudo /usr/local/bin/r10k puppetfile install --puppetfile /etc/puppet/Puppetfile --moduledir /etc/puppet/modules
+if [ -e /etc/puppet/Puppetfile -a -e /etc/puppet/modules ]; then
+  sudo /usr/local/bin/r10k puppetfile install --puppetfile /etc/puppet/Puppetfile --moduledir /etc/puppet/modules
+fi
 
 # run puppet
-sudo /usr/bin/puppet apply /etc/puppet/manifests/site.pp
+if [ -e /etc/puppet/manifests/site.pp ]; then
+  sudo /usr/bin/puppet apply /etc/puppet/manifests/site.pp
+else
+  echo "File /etc/puppet/manifests/site.pp does not exist"
+fi
