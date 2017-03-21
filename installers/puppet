@@ -32,7 +32,7 @@ fi
 
 # install Puppetfile modules
 if [ -e /etc/puppet/Puppetfile -a -e /etc/puppet/modules ]; then
-  sudo /usr/local/bin/r10k puppetfile install --puppetfile /etc/puppet/Puppetfile --moduledir /etc/puppet/modules
+  sudo /usr/local/bin/r10k puppetfile install --puppetfile /etc/puppet/Puppetfile --moduledir /etc/puppet/puppetfile-modules
 fi
 
 # run puppet
