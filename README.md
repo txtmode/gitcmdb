@@ -9,7 +9,7 @@ Every defined number of seconds hosts connect to Github to update a specific bra
 ## Installation
 
 ```
-wget --quiet 'https://raw.githubusercontent.com/txtmode/gitcmdb/master/installers/gitcmdb?' -O - | bash -s <repo> <install folder>
+wget --quiet 'https://raw.githubusercontent.com/txtmode/gitcmdb/master/gitcmdb?' -O - | bash -s <repo> <install folder>
 ```
 where:
 * repo is your repo, default https://github.com/txtmode/gitcmdb
