@@ -1,6 +1,6 @@
 cron: gitcmdb
 frequency: 1
 installer: puppet
-repo: https://github.com/txtmode/gitcmdb-puppet.git
+installerrepo: https://github.com/txtmode/gitcmdb-puppet.git
 branch: master
 key: provisioning
