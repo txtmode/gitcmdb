@@ -27,16 +27,16 @@ parse_yaml() {
 }
 
 check_git() {
-  if [ ! -e /usr/bin/git ]; then
-    if [ -e /etc/redhat_release ]; then
-      sudo /bin/yum -y install git && return 0
-    elif [ -e /etc/debian_version ]; then
-      sudo /usr/bin/apt-get -y install git && return 0
-    else
-       echo "Unsuported distribution"
-       return 1
-    fi
-  fi
+   if [ ! -e /usr/bin/git ]; then
+      if [ -e /etc/redhat_release ]; then
+         sudo /bin/yum -y install git && return 0
+      elif [ -e /etc/debian_version ]; then
+         sudo /usr/bin/apt-get -y install git && return 0
+      else
+         echo "Unsuported distribution"
+         return 1
+      fi
+   fi
 }
 
 # Create lockdir or exit
@@ -56,15 +56,15 @@ sudo mkdir -p "$gitcmdb_path" &&
 # Update or clone repo
 check_git &&
 if [ -e "$gitcmdb_path/gitcmdb" ]; then
-    sudo git --git-dir "$gitcmdb_path/gitcmdb/.git" --work-tree "$gitcmdb_path/gitcmdb" pull | grep -v 'Already up-to-date' && export setcron=yes
+   sudo git --git-dir "$gitcmdb_path/gitcmdb/.git" --work-tree "$gitcmdb_path/gitcmdb" pull | grep -v 'Already up-to-date' && export setcron=yes
 else
-    sudo git clone "$gitcmdb_repo" "$gitcmdb_path/gitcmdb" 2>&1 >/dev/null && export setcron=yes
+   sudo git clone "$gitcmdb_repo" "$gitcmdb_path/gitcmdb" 2>&1 >/dev/null && export setcron=yes
 fi
 
 # Read configuration
 if [ -e "$gitcmdb_path/gitcmdb/configs/default.yaml" ]; then eval $(parse_yaml "$gitcmdb_path/gitcmdb/configs/default.yaml" "gitcmdb_"); fi
-if [ "$role" != '' -a -e "$gitcmdb_path/gitcmdb/configs/roles/$role.yaml" ]; then eval $(parse_yaml "$gitcmdb_path/gitcmdb/configs/roles/$role.yaml" "gitcmdb_"); fi
-if [ "$instance" != '' -a -e "$gitcmdb_path/gitcmdb/configs/instances/$instance.yaml" ]; then eval $(parse_yaml "$gitcmdb_path/gitcmdb/configs/instances/$instance.yaml" "gitcmdb_"); fi
+if [ "$role" != '' -a -e "$gitcmdb_path/gitcmdb/configs/$role/default.yaml" ]; then eval $(parse_yaml "$gitcmdb_path/gitcmdb/configs/$role/default.yaml" "gitcmdb_"); fi
+if [ "$instance" != '' -a -e "$gitcmdb_path/gitcmdb/configs/$role/$instance.yaml" ]; then eval $(parse_yaml "$gitcmdb_path/gitcmdb/configs/$role/$instance.yaml" "gitcmdb_"); fi
 
 # check if repo is downloaded in gitcmdb_path, if not install it, if yes update it and set runinstaller
 if [ ! -e "$gitcmdb_path/gitcmdb_$gitcmdb_installer" ]; then
@@ -75,14 +75,16 @@ else
    sudo git --git-dir "$gitcmdb_path/gitcmdb_$gitcmdb_installer/.git" --work-tree "$gitcmdb_path/gitcmdb_$gitcmdb_installer" checkout $gitcmdb_branch && export runinstaller=yes
 fi
 
-# Run specific installer and set cron if runinstaller==yes (all environment variables set)
+# Run specific installers if runinstaller==yes (all environment variables set)
 if [ "$runinstaller" = 'yes' ]; then
-   source "$gitcmdb_path/gitcmdb/installers/$gitcmdb_installer"
+   for gitcmdb_installer in $gitcmdb_installers; do
+      source "$gitcmdb_path/gitcmdb/installers/$gitcmdb_installer"
+   done
 fi
 
 # Set cron if setcron==yes
 if [ "$setcron" = 'yes' -o ! -e /etc/cron.d/gitcmdb ]; then
-   sudo echo "* * * * */$gitcmdb_frequency root $gitcmdb_path/gitcmdb/installers/gitcmdb \"$gitcmdb_repo\" \"$gitcmdb_path\" 2>&1 | logger -t cmdb" | sudo tee /etc/cron.d/gitcmdb
+   sudo echo "* * * * */$gitcmdb_cronfrequency root $gitcmdb_path/gitcmdb/gitcmdb \"$gitcmdb_repo\" \"$gitcmdb_path\" 2>&1 | logger -t cmdb" | sudo tee /etc/cron.d/gitcmdb
 fi
 
 # Remove lockdir
