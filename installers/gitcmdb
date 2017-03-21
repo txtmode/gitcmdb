@@ -62,7 +62,7 @@ else
 fi
 
 # Set cron
-if [ ! -e '/etc/cron.d/gitcmdb' ]; then sudo echo "* * * * */$gitcmdb_frequency root $gitcmdb_path/gitcmdb/installers/gitcmdb \"$gitcmdb_repo\" \"$gitcmdb_path\" 2>&1 | logger -t cmdb" > /etc/cron.d/gitcmdb; fi
+if [ ! -e '/etc/cron.d/gitcmdb' ]; then sudo echo "* * * * */$gitcmdb_frequency root $gitcmdb_path/gitcmdb/installers/gitcmdb \"$gitcmdb_repo\" \"$gitcmdb_path\" 2>&1 | logger -t cmdb" | sudo tee --append /etc/cron.d/gitcmdb; fi
 
 # Read configuration
 if [ -e "$gitcmdb_path/gitcmdb/configs/default.yaml" ]; then eval $(parse_yaml "$gitcmdb_path/gitcmdb/configs/default.yaml" "gitcmdb_"); fi
