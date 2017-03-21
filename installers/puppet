@@ -2,9 +2,7 @@
 # Expected environment variables
 # * role (first part of the hostname)
 # * instance (second part of the hostname)
-# * gitcmdb_repo (puppet repo to download)
-# * gitcmdb_branch ( puppet repo branch)
-# * gitcmdb_path (folder where to download the repo)
+# * gitcmdb_path (folder where repo was downloaded)
 echo Running puppet installer
 
 # check if puppet is installed
