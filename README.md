@@ -30,6 +30,7 @@ Configuration variables will be load from:
 * config/default.yaml
 * config/*role*/default.yaml
 * config/*role*/*instance*.yaml
+
 and it that order so the later has preference
 
 All those environment variables will be load and then *gitcmdb_installers* will be executed in the written order
