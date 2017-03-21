@@ -3,7 +3,11 @@
 
 CMDB system where CMDB server is git server (for example GitHub)
 
-Every defined number of seconds hosts connect to Github to update a specific branch of a repo and execute one installer. Currently the only supported puppet, and simple bash scripts. Ansible will be adder later.
+Every defined number of seconds hosts connect to Github to update a specific branch of a repo and execute a list of installers.
+
+Currently the only supported ones are puppet and simple bash scripts. Ansible will be adder later.
+
+Multiple installers can be executed in the same host and at the same cron execution. So you can mix for example bash for some tasks and puppet for other more complex tasks.
 
 
 ## Installation
@@ -28,7 +32,7 @@ Configuration variables will be load from:
 * config/*role*/*instance*.yaml
 and it that order so the later has preference
 
-All those environment variables will be load and then *gitcmdb_installer* will be executed
+All those environment variables will be load and then *gitcmdb_installers* will be executed in the written order
 
 ## Specific installers
 ### Puppet
