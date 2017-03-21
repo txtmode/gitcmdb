@@ -23,16 +23,16 @@ if [ ! -e /usr/local/bin/r10k ]; then
 fi
 
 # check /etc/puppet link
-if [ ! "$(readlink /etc/puppet)" = "$gitcmdb_path/gitcmdb_installer" ]; then
+if [ ! "$(readlink /etc/puppet)" = "$gitcmdb_path/gitcmdb_installer/puppet" ]; then
   sudo mv -f /etc/puppet /etc/puppet.`date +%s`
-  sudo ln -sf $gitcmdb_path/gitcmdb_installer /etc/puppet
+  sudo ln -sf $gitcmdb_path/gitcmdb_installer/puppet /etc/puppet
 fi
 
 # check /etc/facter/facts.d link
 sudo mkdir -p /etc/facter
-if [ ! "$(readlink /etc/facter/facts.d)" = "$gitcmdb_path/gitcmdb_installer/facts.d" ]; then
+if [ ! "$(readlink /etc/facter/facts.d)" = "$gitcmdb_path/gitcmdb_installer/puppet/facts.d" ]; then
   sudo mv -f /etc/facter/facts.d /etc/facter/facts.d.`date +%s`
-  sudo ln -sf $gitcmdb_path/gitcmdb_installer/facts.d /etc/facter/facts.d
+  sudo ln -sf $gitcmdb_path/gitcmdb_installer/puppet/facts.d /etc/facter/facts.d
 fi
 
 # install Puppetfile modules
